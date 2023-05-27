@@ -1,25 +1,17 @@
-package ru.shavshin.weathersensor.model.dto;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package ru.shavshin.weathersensor.dto;
+
+import lombok.Data;
+import lombok.Value;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Value
 public class MeasurementDTO {
-
-    private SensorDTO sensor;
 
     @Min(value = -100, message = "Value should not be lower than -100!")
     @Max(value = 100, message = "Value should not be greater than 100!")
-    private Double value;
-
-    private Boolean raining;
-
-
-
-
+    Double value;
+    Boolean raining;
+    SensorDTO sensor;
 }

@@ -1,32 +1,36 @@
 package ru.shavshin.weathersensor.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.shavshin.weathersensor.dal.entity.MeasurementEntity;
 import ru.shavshin.weathersensor.dal.repository.MeasurementRepository;
+import ru.shavshin.weathersensor.dto.MeasurementDTO;
+import ru.shavshin.weathersensor.exception.WrongMeasurementsException;
 
-
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class MeasurementService {
 
     private final MeasurementRepository measurementRepository;
-    private final SensorService sensorService;
-    @Autowired
-    public MeasurementService(MeasurementRepository measurementRepository, SensorService sensorService) {
-        this.measurementRepository = measurementRepository;
-        this.sensorService = sensorService;
+    private final ModelMapper modelMapper;
+
+    public List<MeasurementDTO> findAll() {
+        return measurementRepository.findAll().stream()
+                .map(this::toMeasurementDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<MeasurementEntity> findAll() {
-        return measurementRepository.findAll();
-    }
-
-    public void save(MeasurementEntity measurement) {
-        enrichMeasurement(measurement);
-        measurementRepository.save(measurement);
+    public MeasurementDTO save(MeasurementDTO measurementDTO) {
+        return Optional.of(measurementDTO)
+                .map(this::toMeasurementEntity)
+                .map(measurementRepository::save)
+                .map(this::toMeasurementDTO)
+                .orElseThrow(WrongMeasurementsException::new);
     }
 
     public int getRainyDays() {
@@ -40,8 +44,12 @@ public class MeasurementService {
         return count;
     }
 
-    public void enrichMeasurement(MeasurementEntity measurement) {
-        measurement.setSensor(sensorService.findByName(measurement.getSensor().getName()).get());
-        measurement.setCreatedAt(LocalDateTime.now());
+    private MeasurementEntity toMeasurementEntity(MeasurementDTO measurementDTO) {
+        return modelMapper.map(measurementDTO, MeasurementEntity.class);
     }
+
+    private MeasurementDTO toMeasurementDTO(MeasurementEntity measurement) {
+        return modelMapper.map(measurement, MeasurementDTO.class);
+    }
+
 }

@@ -3,6 +3,7 @@ package ru.shavshin.weathersensor.dal.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -16,9 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MeasurementEntity {
 
-    @ManyToOne()
-    @JoinColumn(name = "sensor", referencedColumnName = "sensor_name")
-    private SensorEntity sensor;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -30,8 +28,11 @@ public class MeasurementEntity {
     @Column(name = "raining")
     private Boolean raining;
     @Column(name = "created_at")
+    @CreationTimestamp
     private LocalDateTime createdAt;
-
+    @ManyToOne
+    @JoinColumn(name = "sensor", referencedColumnName = "sensor_name")
+    private SensorEntity sensor;
 
 
     public MeasurementEntity(Double value, Boolean raining, SensorEntity sensor) {
@@ -39,7 +40,4 @@ public class MeasurementEntity {
         this.raining = raining;
         this.sensor = sensor;
     }
-
-
-
 }

@@ -1,7 +1,6 @@
 package ru.shavshin.weathersensor.dal.entity;
 
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,10 +20,4 @@ public class SensorEntity implements Serializable {
     private Integer id;
     @Column(name = "sensor_name")
     private String name;
-
-
-
-
-
-
 }

@@ -1,4 +1,4 @@
-package ru.shavshin.weathersensor.util.exception;
+package ru.shavshin.weathersensor.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

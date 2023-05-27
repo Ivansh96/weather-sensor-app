@@ -1,6 +1,6 @@
-package ru.shavshin.weathersensor.util.exception.sensor;
+package ru.shavshin.weathersensor.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -9,14 +9,9 @@ import ru.shavshin.weathersensor.service.SensorService;
 
 
 @Component
+@RequiredArgsConstructor
 public class SensorValidator implements Validator {
-
     private final SensorService sensorService;
-
-    @Autowired
-    public SensorValidator(SensorService sensorService) {
-        this.sensorService = sensorService;
-    }
 
     @Override
     public boolean supports(Class<?> clazz) {
